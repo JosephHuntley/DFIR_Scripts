@@ -17,8 +17,8 @@ mkdir "C:\Tools"
 
 # Disable “Cloud-delivered protection” and “Automatic sample submission”
 Write-Host "Disabling Cloud-delivered protection and Automatic sample submission"
-Set-MpPreference -MAPSReporting Disabled
-Set-MpPreference -SubmitSamplesConsent NeverSend
+Set-MpPreference -MAPSReporting 0
+Set-MpPreference -SubmitSamplesConsent 2
 Set-MpPreference -DisableBlockAtFirstSeen $true
 
 # Exclude case evidence folder
@@ -32,6 +32,12 @@ Add-MpPreference -ExclusionPath "C:\Tools"
 
 Write-Host "=== Installing DFIR tools... ==="
 
+# Check for winget or throw error
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "winget not found. Install App Installer from Microsoft Store first."
+    exit 1
+}
+
 # -----------------------------
 # Eric Zimmerman's Tools
 # -----------------------------
@@ -39,7 +45,7 @@ Write-Host "Installing Eric Zimmerman’s tools..."
 Invoke-WebRequest -Uri "https://f001.backblazeb2.com/file/EricZimmermanTools/Get-ZimmermanTools.zip" -OutFile "$env:TEMP\Get-ZimmermanTools.zip"
 Expand-Archive "$env:TEMP\Get-ZimmermanTools.zip" -DestinationPath "C:\Tools\EricZimmerman" -Force
 Set-Location "C:\Tools\EricZimmerman"
-powershell -ExecutionPolicy Bypass -File ".\Get-ZimmermanTools.ps1"
+& ".\Get-ZimmermanTools.ps1" -Dest "C:\Tools\EricZimmerman"
 
 # -----------------------------
 # RegRipper 3.0
@@ -72,25 +78,25 @@ winget install --id Notepad++.Notepad++ -e --source winget
 Write-Host "Installing Wireshark..."
 winget install --id WiresharkFoundation.Wireshark -e --source winget
 
-# -----------------------------
-# Arsenal Image Mounter
-# -----------------------------
-Write-Host "Installing Arsenal Image Mounter..."
-Invoke-WebRequest -Uri "https://arsenalrecon.com/downloads/AIMSetup.msi" -OutFile "$env:TEMP\AIMSetup.msi"
-Start-Process msiexec.exe -ArgumentList "/i `"$env:TEMP\AIMSetup.msi`" /quiet /norestart" -Wait
+# # -----------------------------
+# # Arsenal Image Mounter
+# # -----------------------------
+# Write-Host "Installing Arsenal Image Mounter..."
+# Invoke-WebRequest -Uri "https://arsenalrecon.com/downloads/AIMSetup.msi" -OutFile "$env:TEMP\AIMSetup.msi"
+# Start-Process msiexec.exe -ArgumentList "/i `"$env:TEMP\AIMSetup.msi`" /quiet /norestart" -Wait
 
-# -----------------------------
-# KAPE
-# -----------------------------
-Write-Host "Installing KAPE..."
-Invoke-WebRequest -Uri "https://s3.amazonaws.com/kroll-kape/KAPE.zip" -OutFile "$env:TEMP\KAPE.zip"
-Expand-Archive "$env:TEMP\KAPE.zip" -DestinationPath "C:\Tools\KAPE" -Force
+# # -----------------------------
+# # KAPE
+# # -----------------------------
+# Write-Host "Installing KAPE..."
+# Invoke-WebRequest -Uri "https://s3.amazonaws.com/kroll-kape/KAPE.zip" -OutFile "$env:TEMP\KAPE.zip"
+# Expand-Archive "$env:TEMP\KAPE.zip" -DestinationPath "C:\Tools\KAPE" -Force
 
-# -----------------------------
-# FTK Imager
-# -----------------------------
-Write-Host "Installing FTK Imager..."
-Invoke-WebRequest -Uri "https://ad-pdf.s3.amazonaws.com/FTK-Imager-4.7.1.exe" -OutFile "$env:TEMP\FTKImager.exe"
-Start-Process "$env:TEMP\FTKImager.exe" -ArgumentList "/quiet /norestart" -Wait
+# # -----------------------------
+# # FTK Imager
+# # -----------------------------
+# Write-Host "Installing FTK Imager..."
+# Invoke-WebRequest -Uri "https://ad-pdf.s3.amazonaws.com/FTK-Imager-4.7.1.exe" -OutFile "$env:TEMP\FTKImager.exe"
+# Start-Process "$env:TEMP\FTKImager.exe" -ArgumentList "/quiet /norestart" -Wait
 
 Write-Host "=== DFIR Workstation setup complete! ==="
