@@ -8,9 +8,6 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer
 mkdir "C:\Cases"
 mkdir "C:\Tools"
 
-# Temporarily disable real-time protection
-Set-MpPreference -DisableRealtimeMonitoring $true
-
 # Disable “Cloud-delivered protection” and “Automatic sample submission”
 Set-MpPreference -MAPSReporting Disabled
 Set-MpPreference -SubmitSamplesConsent NeverSend
