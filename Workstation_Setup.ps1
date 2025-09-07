@@ -16,7 +16,7 @@ mkdir "C:\Cases"
 mkdir "C:\Tools"
 
 # Disable “Cloud-delivered protection” and “Automatic sample submission”
-Write-Host "Disabling Cloud-delivered protection and Automatic sample submission”
+Write-Host "Disabling Cloud-delivered protection and Automatic sample submission"
 Set-MpPreference -MAPSReporting Disabled
 Set-MpPreference -SubmitSamplesConsent NeverSend
 Set-MpPreference -DisableBlockAtFirstSeen $true
