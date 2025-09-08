@@ -49,27 +49,6 @@ New-ItemProperty -Path $RegPath -Name "Enable" -PropertyType DWORD -Value 0 -For
 Write-Host "Copilot has been disabled. Please restart your PC for changes to take effect."
 
 # -----------------------------
-# Remove shortcuts from taskbar
-# -----------------------------
-# Load COM object for shell
-$Shell = New-Object -ComObject Shell.Application
-$Path = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
-
-# Get all pinned items
-$PinnedItems = Get-ChildItem -Path $Path -Filter *.lnk
-
-foreach ($item in $PinnedItems) {
-    try {
-        Remove-Item $item.FullName -Force
-        Write-Host "Removed pinned item: $($item.Name)"
-    } catch {
-        Write-Host "Failed to remove: $($item.Name) — $_"
-    }
-}
-
-Write-Host "All removable pinned taskbar items have been unpinned."
-
-# -----------------------------
 # Remove shortcuts from Desktop
 # -----------------------------
 
